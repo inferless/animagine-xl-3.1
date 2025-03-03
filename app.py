@@ -1,3 +1,6 @@
+import os
+os.environ["HF_HUB_ENABLE_HF_TRANSFER"]='1'
+from huggingface_hub import snapshot_download
 import torch
 from diffusers import DiffusionPipeline
 from io import BytesIO
@@ -8,8 +11,10 @@ import os
 class InferlessPythonModel:
     def initialize(self):
         # Configure the pipeline
+        model_id = "cagliostrolab/animagine-xl-3.1"
+        snapshot_download(repo_id=model_id,allow_patterns=["*.safetensors"])
         self.pipe = DiffusionPipeline.from_pretrained(
-                        "cagliostrolab/animagine-xl-3.1", 
+                        model_id, 
                         torch_dtype=torch.float16, 
                         use_safetensors=True, 
                     )
